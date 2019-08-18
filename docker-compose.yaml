@@ -1,0 +1,92 @@
+version: '3.7'
+
+networks:
+  messaging:
+    external: false
+  storage:
+    external: false
+
+services:
+
+  storagedriver:
+    build: .
+    container_name: 'storage'
+    depends_on:
+      - elasticsearch
+      - messagebroker
+    environment:
+      QUEUE_PROTOCOL: 'AMQP'
+      QUEUE_SERVER_HOSTNAME: 'messagebroker'
+      # QUEUE_USERNAME: 'guest'
+      # QUEUE_PASSWORD: 'guest'
+    hostname: 'storagehost'
+    networks:
+      - storage
+      - messaging
+    # ports: []
+    volumes:
+      - '.:/srv:ro'
+
+  elasticsearch:
+    container_name: 'es'
+    environment:
+      DISCOVERY_TYPE: single-node
+      DISCOVERY_ZEN_MINIMUM_MASTER_NODES: 1
+      CLUSTER_INITIAL_MASTER_NODES: elasticsearch
+    hostname: 'eshost'
+    image: elasticsearch:7.3.0
+    networks:
+      - storage
+    ports:
+      - '9200:9200/tcp'
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - "$PWD/configuration/elasticsearch/config.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro"
+
+  messagebroker:
+    container_name: 'qhost'
+    hostname: 'qhost'
+    image: 'rabbitmq:management-alpine'
+    networks:
+      - messaging
+    ports:
+      - '5672:5672/tcp'
+      - '15672:15672/tcp'
+    volumes:
+      # Run $env:PWD=$(pwd) on Windows to fix this issue.
+      - "${PWD}/configuration/rabbitmq/enabled_plugins.erl:/etc/rabbitmq/enabled_plugins:ro"
+
+  # Taken from https://raw.githubusercontent.com/JonathanWilbur/nelk-stack-docker/master/docker-compose.yml.
+  # See: https://www.elastic.co/guide/en/kibana/current/docker.html.
+  kibana:
+    container_name: 'elk-kibana'
+    depends_on:
+      - 'elasticsearch'
+    # See: https://www.elastic.co/guide/en/kibana/current/settings.html.
+    environment:
+      SERVER_NAME: 'kibana.example.org'
+      SERVER_PORT: '5601'
+      ELASTICSEARCH_URL: 'http://elasticsearch:9200'
+      ELASTICSEARCH_HOSTS: 'http://elasticsearch:9200'
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:5601" ]
+      interval: '1m'
+      timeout: '10s'
+      retries: 3
+      start_period: '1m'
+    hostname: 'kibanahost'
+    image: 'kibana:7.3.0'
+    init: false
+    labels:
+      github: 'https://github.com/elastic/kibana'
+      homepage: 'https://www.elastic.co/products/kibana'
+    networks:
+      - 'storage'
+    ports:
+      - '5601:5601/tcp'
+    restart: 'unless-stopped'
+    volumes:
+      - "$PWD/configuration/kibana/config.yml:/usr/share/kibana/config/kibana.yml:ro"

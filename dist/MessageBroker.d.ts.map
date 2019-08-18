@@ -1,0 +1,1 @@
+{"version":3,"file":"MessageBroker.d.ts","sourceRoot":"","sources":["../source/MessageBroker.ts"],"names":[],"mappings":"AAEA,MAAM,WACI,aAAa;IACnB,UAAU,IAAK,OAAO,CAAC,OAAO,CAAC,CAAC;IAKhC,YAAY,CAAE,KAAK,EAAE,MAAM,EAAE,OAAO,EAAE,MAAM,GAAG,IAAI,CAAC;IACpD,eAAe,IAAK,OAAO,CAAC,OAAO,CAAC,CAAC;CACxC"}

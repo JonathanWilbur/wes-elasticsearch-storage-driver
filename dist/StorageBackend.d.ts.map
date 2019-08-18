@@ -1,0 +1,1 @@
+{"version":3,"file":"StorageBackend.d.ts","sourceRoot":"","sources":["../source/StorageBackend.ts"],"names":[],"mappings":"AAeA,qBACM,cAAc;IAChB,OAAO,CAAC,MAAM,CAAa;;IAQd,UAAU,IAAK,OAAO,CAAC,IAAI,CAAC;IA2B5B,aAAa,CAAE,KAAK,EAAE,GAAG,GAAG,OAAO,CAAC,IAAI,CAAC;CAOzD;AAED,QAAA,MAAM,OAAO,EAAE,cAAqC,CAAC;AACrD,eAAe,OAAO,CAAC"}
