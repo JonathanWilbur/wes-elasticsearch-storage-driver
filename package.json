@@ -23,7 +23,7 @@
     "eslint": "^6.1.0",
     "jest": "^24.9.0",
     "jest-junit": "^7.0.0",
-    "serverless": "^1.50.0",
+    "serverless": "^3.25.1",
     "ts-loader": "^6.0.4",
     "typescript": "^3.5.3",
     "webpack": "^4.39.2",
